@@ -23,13 +23,13 @@ const AuthPageLayout: React.FC<{ children: React.ReactNode }> = ({ children }) =
   return (
     <div className="min-h-screen flex flex-col lg:flex-row">
       {/* Left Branding Section */}
-      <div className="hidden lg:flex lg:w-[55%] xl:w-1/2 relative overflow-hidden bg-gradient-to-br from-brand via-brand-light to-brand-lighter">
+      <div className="hidden lg:flex lg:w-[55%] xl:w-1/2 relative overflow-hidden bg-linear-to-br from-brand via-brand-light to-brand-lighter">
         {/* Decorative Elements */}
         <div className="absolute inset-0 pointer-events-none">
           {/* Large circles for depth */}
-          <div className="absolute -top-32 -left-32 w-[400px] h-[400px] bg-white/10 rounded-full blur-3xl" />
-          <div className="absolute top-1/4 -right-32 w-[450px] h-[450px] bg-white/10 rounded-full blur-3xl" />
-          <div className="absolute -bottom-32 left-1/3 w-[350px] h-[350px] bg-white/15 rounded-full blur-3xl" />
+          <div className="absolute -top-32 -left-32 w-100 h-100 bg-white/10 rounded-full blur-3xl" />
+          <div className="absolute top-1/4 -right-32 w-112.5 h-112.5 bg-white/10 rounded-full blur-3xl" />
+          <div className="absolute -bottom-32 left-1/3 w-87.5 h-87.5 bg-white/15 rounded-full blur-3xl" />
           
           {/* Sound wave pattern at bottom */}
           <div className="absolute bottom-0 left-0 right-0 h-48 opacity-15 text-white">
