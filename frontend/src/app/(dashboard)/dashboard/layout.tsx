@@ -16,6 +16,7 @@ import { type Metadata } from "next";
 import { Separator } from "~/components/ui/separator";
 import Link from "next/link";
 import BreadcrumbPageClient from "~/components/sidebar/breadcrumb-page-client";
+import AppSidebar from "~/components/sidebar/app-sidebar";
 
 export const metadata: Metadata = {
   title: "EchoCraft.ai",
@@ -27,6 +28,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <Providers>
       <SidebarProvider>
+        <AppSidebar />
         <SidebarInset className="flex h-screen flex-col">
           <header className="bg-background supports-backdrop-filter:bg-background/60 border-border/40 sticky top-0 z-10 border-b backdrop-blur px-6 py-3 shadow-xs">
             <div className="flex shrink-0 grow items-center gap-3">
