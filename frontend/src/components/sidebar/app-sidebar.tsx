@@ -6,6 +6,7 @@ import Link from "next/link"
 import { UserButton } from "@daveyplate/better-auth-ui"
 import SidebarMenuItems from "./sidebar-menu-items"
 import MobileSidebarClose from "./mobile-sidebar-close"
+import Credits from "./credits"
 
 const AppSidebar =  async () => {
   return (
@@ -28,6 +29,7 @@ const AppSidebar =  async () => {
             </SidebarGroup>
         </SidebarContent>
         <SidebarFooter>
+            <Credits />
             <UserButton variant='outline' className="border-muted-foreground/20 hover:border-primary/50 w-full transition-colors duration-200" disableDefaultLinks={true} additionalLinks={[
                 {
                     label: "Customer Portal",
