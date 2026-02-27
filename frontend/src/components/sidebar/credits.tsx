@@ -1,12 +1,11 @@
-import { Coins, Sparkles, Zap, Gem } from "lucide-react";
-import React from "react";
+import { Sparkles, Zap, Gem } from "lucide-react";
 import { getUserCredits } from "~/actions/tts";
-import { Button } from "../ui/button";
 import {
   SidebarGroup,
   SidebarMenu,
   SidebarMenuItem,
 } from "../ui/sidebar";
+import UpgradeButton from "./upgrade-button";
 
 const Credits = async () => {
   const result = await getUserCredits();
@@ -18,7 +17,7 @@ const Credits = async () => {
       <SidebarMenu>
         <SidebarMenuItem>
           <div
-            className="group/credits relative flex w-full flex-col overflow-hidden rounded-xl bg-gradient-to-br from-brand-dark via-brand to-brand-light p-0.5 text-white shadow-lg transition-all hover:shadow-xl"
+            className="group/credits relative flex w-full flex-col overflow-hidden rounded-xl bg-linear-to-br from-brand-dark via-brand to-brand-light p-0.5 text-white shadow-lg transition-all hover:shadow-xl"
           >
             <div className="relative flex w-full flex-col gap-3 bg-white/5 p-3 backdrop-blur-sm">
                 
@@ -44,10 +43,11 @@ const Credits = async () => {
                   </div>
                 </div>
 
-                <Button variant="secondary" size="sm" className="w-full text-brand-dark hover:text-brand font-bold shadow-sm h-8 z-20">
+                {/* <Button variant="secondary" size="sm" className="w-full text-brand-dark hover:text-brand font-bold shadow-sm h-8 z-20">
                     <Coins className="mr-2 h-3.5 w-3.5" />
                     Buy Credits
-                </Button>
+                </Button> */}
+                <UpgradeButton />
 
                 {/* Decorative Elements */}
                 <div className="absolute right-2 top-2 h-1.5 w-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)] animate-pulse"></div>
