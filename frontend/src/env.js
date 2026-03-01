@@ -17,6 +17,11 @@ export const env = createEnv({
     AWS_SECRET_ACCESS_KEY: z.string(),
     AWS_REGION: z.string().default("us-east-1"),
     AWS_S3_BUCKET_NAME: z.string(),
+
+    MODAL_API_KEY: z.string(),
+    MODAL_API_SECRET: z.string(),
+    MODAL_API_URL: z.string().url(),
+
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),
@@ -50,7 +55,10 @@ export const env = createEnv({
     AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
     AWS_REGION: process.env.AWS_REGION,
     AWS_S3_BUCKET_NAME: process.env.AWS_S3_BUCKET_NAME,
-    
+    MODAL_API_KEY: process.env.MODAL_API_KEY,
+    MODAL_API_SECRET: process.env.MODAL_API_SECRET,
+    MODAL_API_URL: process.env.MODAL_API_URL,
+
     NEXT_PUBLIC_POLAR_SERVER: process.env.NEXT_PUBLIC_POLAR_SERVER,
     // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   },

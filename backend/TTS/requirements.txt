@@ -1,0 +1,8 @@
+numpy
+torch
+torchaudio
+pydantic
+fastapi
+requests
+modal
+chatterbox-tts
