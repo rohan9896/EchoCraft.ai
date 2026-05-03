@@ -25,22 +25,39 @@ interface GenerateSpeechResult {
 
 const S3_BUCKET_URL = `https://${env.AWS_S3_BUCKET_NAME}.s3.${env.AWS_REGION}.amazonaws.com`;
 
-export const generateSpeech = async (data: GenerateSpeechData): Promise<GenerateSpeechResult> => {
+interface UserAudioProjectListItem {
+  id: string;
+  s3Key: string;
+  audioUrl: string;
+  text: string;
+  language: string;
+  createdAt: Date;
+}
+
+export interface GetUserAudioProjectsResult {
+  success: boolean;
+  projects: UserAudioProjectListItem[];
+  error?: string;
+}
+
+export const generateSpeech = async (
+  data: GenerateSpeechData,
+): Promise<GenerateSpeechResult> => {
   try {
     const session = await auth.api.getSession({
       headers: await headers(),
     });
 
-    if(!session?.user?.id) {
+    if (!session?.user?.id) {
       return { success: false, error: "Unauthorized: No user session found" };
     }
 
-    if(!data.text || !data.voice_s3_key || !data.language) {
+    if (!data.text || !data.voice_s3_key || !data.language) {
       return { success: false, error: "Missing required parameters" };
     }
 
     const creditsNeeded = Math.max(1, Math.ceil(data.text.length / 100)); // Example: 1 credit per 100 characters
-    
+
     const user = await db.user.findUnique({
       where: { id: session.user.id },
       select: { credits: true },
@@ -71,13 +88,15 @@ export const generateSpeech = async (data: GenerateSpeechData): Promise<Generate
       }),
     });
 
-    if(!response.ok) {
+    if (!response.ok) {
       const errorText = await response.text();
       console.error("TTS generation failed:", errorText);
       return { success: false, error: "TTS generation failed" };
     }
 
-    const result = (await response.json()) as { generated_audio_s3_key: string }
+    const result = (await response.json()) as {
+      generated_audio_s3_key: string;
+    };
 
     const audioUrl = `${S3_BUCKET_URL}/${result.generated_audio_s3_key}`;
 
@@ -103,7 +122,6 @@ export const generateSpeech = async (data: GenerateSpeechData): Promise<Generate
         cfgWeight: data.cfg_weight,
         userId: session.user.id,
       },
-
     });
 
     return {
@@ -111,15 +129,56 @@ export const generateSpeech = async (data: GenerateSpeechData): Promise<Generate
       s3_key: result.generated_audio_s3_key,
       audioUrl,
       projectId: audioProject.id,
-    }
-
-
+    };
   } catch (error) {
     console.error("Error generating speech:", error);
-    return { success: false, error: "An error occurred while generating speech" };
+    return {
+      success: false,
+      error: "An error occurred while generating speech",
+    };
   }
-}
+};
 
+export const getUserAudioProjects = cache(
+  async (): Promise<GetUserAudioProjectsResult> => {
+  try {
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    });
+
+    if (!session?.user?.id) {
+      return {
+        success: false,
+        projects: [],
+        error: "Unauthorized: No user session found",
+      };
+    }
+
+    const projects = await db.audioProject.findMany({
+      where: { userId: session.user.id },
+      orderBy: { createdAt: "desc" },
+      select: {
+        id: true,
+        s3Key: true,
+        audioUrl: true,
+        text: true,
+        language: true,
+        createdAt: true,
+      },
+    });
+
+    return { success: true, projects };
+
+  } catch (error) {
+    console.error("Error fetching user audio projects:", error);
+    return {
+      success: false,
+      projects: [],
+      error: "An error occurred while fetching audio projects",
+    };
+  }
+  },
+);
 
 export const getUserCredits = cache(async () => {
   try {
