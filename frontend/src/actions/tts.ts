@@ -76,12 +76,12 @@ export const generateSpeech = async (
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Model-Key": env.MODAL_API_KEY,
-        "Model-Secret": env.MODAL_API_SECRET,
+        "Modal-Key": env.MODAL_API_KEY,
+        "Modal-Secret": env.MODAL_API_SECRET,
       },
       body: JSON.stringify({
         text: data.text,
-        voice_S3_key: data.voice_s3_key,
+        voice_s3_key: data.voice_s3_key,
         language: data.language,
         exaggeration: data.exaggeration ?? 0.5,
         cfg_weight: data.cfg_weight ?? 0.5,
@@ -90,8 +90,14 @@ export const generateSpeech = async (
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error("TTS generation failed:", errorText);
-      return { success: false, error: "TTS generation failed" };
+      console.error("TTS generation failed:", {
+        status: response.status,
+        body: errorText,
+      });
+      return {
+        success: false,
+        error: `TTS generation failed (HTTP ${response.status})`,
+      };
     }
 
     const result = (await response.json()) as {

@@ -6,7 +6,7 @@ import uuid
 import torch
 import torchaudio
 import modal
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 app = modal.App(name="echocraft-tts-service")
@@ -22,12 +22,30 @@ volume = modal.Volume.from_name("echocraft-cache", create_if_missing=True)
 
 s3_secret = modal.Secret.from_name("ai-voice-studio-aws-secret")
 
-class TTSRequest(BaseModel):
-    text: str
-    voice_s3_key: Optional[str] = None
-    language: str = "en"
-    exaggeration: float = 0.5
-    cfg_weight: float = 0.5
+try:
+    # Pydantic v2
+    from pydantic import ConfigDict
+
+    class TTSRequest(BaseModel):
+        model_config = ConfigDict(populate_by_name=True)
+
+        text: str
+        voice_s3_key: Optional[str] = Field(default=None, alias="voice_S3_key")
+        language: str = "en"
+        exaggeration: float = 0.5
+        cfg_weight: float = 0.5
+
+except ImportError:
+    # Pydantic v1
+    class TTSRequest(BaseModel):
+        text: str
+        voice_s3_key: Optional[str] = Field(default=None, alias="voice_S3_key")
+        language: str = "en"
+        exaggeration: float = 0.5
+        cfg_weight: float = 0.5
+
+        class Config:
+            allow_population_by_field_name = True
 
 
 class TTSResponse(BaseModel):
